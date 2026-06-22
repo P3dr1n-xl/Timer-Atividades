@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel de Metas</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, sans-serif;
+}
+
+body{
+    background:#f4f6f9;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+
+.container{
+    width:800px;
+    background:white;
+    border-radius:15px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.1);
+    overflow:hidden;
+}
+
+.tabs{
+    display:flex;
+    background:#1e3a8a;
+}
+
+.tab-btn{
+    flex:1;
+    padding:15px;
+    border:none;
+    background:none;
+    color:white;
+    cursor:pointer;
+    font-size:15px;
+    transition:0.3s;
+}
+
+.tab-btn:hover{
+    background:rgba(255,255,255,0.15);
+}
+
+.tab-btn.active{
+    background:#2563eb;
+}
+
+.content{
+    display:none;
+    padding:30px;
+    text-align:center;
+}
+
+.content.active{
+    display:block;
+}
+
+h2{
+    margin-bottom:25px;
+    color:#1e3a8a;
+}
+
+.timer{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.time-box{
+    background:#2563eb;
+    color:white;
+    padding:20px;
+    border-radius:12px;
+    min-width:110px;
+}
+
+.time-box span{
+    display:block;
+    font-size:32px;
+    font-weight:bold;
+}
+
+.time-box small{
+    font-size:14px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab(0)">📚 Estudar</button>
+        <button class="tab-btn" onclick="openTab(1)">📝 Atividades</button>
+        <button class="tab-btn" onclick="openTab(2)">🎓 Cursos</button>
+        <button class="tab-btn" onclick="openTab(3)">💼 Currículo</button>
+    </div>
+
+    <!-- Aba 1 -->
+    <div class="content active">
+        <h2>Meta: Estudar</h2>
+        <div class="timer" id="timer1"></div>
+    </div>
+
+    <!-- Aba 2 -->
+    <div class="content">
+        <h2>Meta: Fazer minhas atividades da semana</h2>
+        <div class="timer" id="timer2"></div>
+    </div>
+
+    <!-- Aba 3 -->
+    <div class="content">
+        <h2>Meta: Fazer cursos</h2>
+        <div class="timer" id="timer3"></div>
+    </div>
+
+    <!-- Aba 4 -->
+    <div class="content">
+        <h2>Meta: Atualizar meu currículo</h2>
+        <div class="timer" id="timer4"></div>
+    </div>
+
+</div>
+
+<script>
+// Alternar abas
+function openTab(index){
+    document.querySelectorAll('.content').forEach(tab=>{
+        tab.classList.remove('active');
+    });
+
+    document.querySelectorAll('.tab-btn').forEach(btn=>{
+        btn.classList.remove('active');
+    });
+
+    document.querySelectorAll('.content')[index].classList.add('active');
+    document.querySelectorAll('.tab-btn')[index].classList.add('active');
+}
+
+// Criação dos timers
+function createTimer(elementId, days){
+
+    const targetDate = new Date().getTime() + (days * 24 * 60 * 60 * 1000);
+
+    function update(){
+
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        if(distance <= 0){
+            document.getElementById(elementId).innerHTML =
+            "<h3>✅ Meta concluída!</h3>";
+            return;
+        }
+
+        const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById(elementId).innerHTML = `
+            <div class="time-box">
+                <span>${d}</span>
+                <small>Dias</small>
+            </div>
+
+            <div class="time-box">
+                <span>${h}</span>
+                <small>Horas</small>
+            </div>
+
+            <div class="time-box">
+                <span>${m}</span>
+                <small>Minutos</small>
+            </div>
+
+            <div class="time-box">
+                <span>${s}</span>
+                <small>Segundos</small>
+            </div>
+        `;
+    }
+
+    update();
+    setInterval(update, 1000);
+}
+
+// Metas
+createTimer("timer1", 10); // Estudar
+createTimer("timer2", 6);  // Atividades da semana
+createTimer("timer3", 15); // Cursos
+createTimer("timer4", 3);  // Currículo
+</script>
+
+</body>
+</html>
